@@ -34,7 +34,7 @@ textarea{border:none;line-height:28px;padding:0 4px;background-image:repeating-l
 .wk,.grid{display:grid;grid-template-columns:repeat(7,1fr);column-gap:2px}
 .wk{border-bottom:1px solid var(--fg);padding-bottom:4px;margin-bottom:2px}
 .wk div{text-align:center;font-size:12px;color:var(--mut)}
-.wk div:first-child{color:var(--rib)}
+.wk div:last-child{color:var(--rib)}
 .c{position:relative;min-height:70px;border:none;border-bottom:1px solid var(--bd);border-radius:0;padding:3px 3px 16px;background:transparent;overflow:hidden;font-size:9px;line-height:1.25}
 .c.e{border-bottom:1px solid var(--bd);background:none}
 .c b{font-size:13px;font-weight:600;display:block}
@@ -177,15 +177,15 @@ window.appBack=()=>{
 };
 
 function cal(){
- const y=cur.getFullYear(),m=cur.getMonth(),first=new Date(y,m,1).getDay(),n=new Date(y,m+1,0).getDate(),td=ymd(new Date());
+ const y=cur.getFullYear(),m=cur.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=ymd(new Date());
  const ms=ymd(new Date(y,m,1)),me=ymd(new Date(y,m,n)),LN={},ends=[];
  S.proj.filter(p=>p.s<=me&&pend(p)>=ms).sort((a,b)=>a.s<b.s?-1:1).forEach(p=>{let i=ends.findIndex(x=>x<p.s);if(i<0){i=ends.length;ends.push('')}ends[i]=pend(p);LN[p.id]=i});
  const pb=`padding-bottom:${Math.max(6,4+ends.length*13)}px`;
  let c='';for(let i=0;i<first;i++)c+='<div class="c e"></div>';
  for(let d=1;d<=n;d++){const k=ymd(new Date(y,m,d)),ex=S.exp[k]||[],h=S.hl[k]||{},t=tot(k),nm=projOn(k).filter(p=>p.s===k||(k.endsWith('-01')&&p.s<k));
-  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i>👣${fk(h.steps)}</i>`:''}${h.sleep?`<i>😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)||new Date(y,m,d).getDay()===0?esc(p.n):''}</span>`).join('')}</div></div>`}
+  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i>👣${fk(h.steps)}</i>`:''}${h.sleep?`<i>😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)||new Date(y,m,d).getDay()===1?esc(p.n):''}</span>`).join('')}</div></div>`}
  return `<div class="bar"><button data-a="prev">‹</button><h1>${y}년 ${m+1}월</h1><span><button data-a="next">›</button> <button data-a="set">⚙</button></span></div>
- <div class="wk">${WD.map(w=>`<div>${w}</div>`).join('')}</div><div class="grid">${c}</div>
+ <div class="wk">${['월','화','수','목','금','토','일'].map(w=>`<div>${w}</div>`).join('')}</div><div class="grid">${c}</div>
  <div class="lg"><span><i class="sw g"></i>${fw(S.set.g)} 이하</span><span><i class="sw"></i>보통</span><span><i class="sw y"></i>${fw(S.set.y)} 이상</span><span><i class="sw r"></i>${fw(S.set.r)} 이상</span><span class="lgn">지출 기록이 있는 날만</span></div>`;
 }
 
