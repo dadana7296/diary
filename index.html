@@ -36,10 +36,14 @@ textarea{border:none;line-height:28px;padding:0 4px;background-image:repeating-l
 .wk div{text-align:center;font-size:12px;color:var(--mut)}
 .wk div:last-child{color:var(--rib)}
 .wk div:nth-child(6){color:var(--blue)}
-.c{position:relative;min-height:56px;border:none;border-bottom:1px solid var(--bd);border-radius:0;padding:3px 3px 16px;background:transparent;overflow:hidden;font-size:9px;line-height:1.25}
+.c{position:relative;min-height:46px;border:none;border-bottom:1px solid var(--bd);border-radius:0;padding:3px 3px 16px;background:transparent;overflow:hidden;font-size:9px;line-height:1.25}
 .c.e{border-bottom:1px solid var(--bd);background:none}
 .c b{font-size:13px;font-weight:600;display:block}
 .c i{display:block;font-style:normal;color:var(--mut);white-space:nowrap}
+.c i.hh{font-size:7px;line-height:1.2}
+.tdl{flex:1;display:flex;gap:8px;align-items:center;min-width:0}
+.tdl span{flex:1;min-width:0;word-break:keep-all}
+.tdl.ok span{text-decoration:line-through;color:var(--mut)}
 .c.sat b{color:var(--blue)}
 .c.red b{color:var(--rib)}
 .c.today b{display:inline-block;min-width:21px;height:21px;line-height:19px;text-align:center;border:1.5px solid var(--fg);border-radius:50%;box-sizing:border-box;margin:-2px 0 0 -3px;padding:0 2px}
@@ -98,7 +102,7 @@ button[data-a^="del"]{border-color:var(--bd);color:var(--mut)}
 const $=s=>document.querySelector(s);
 const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const APP=!!(window.Android&&window.Android.syncHealth); // 안드로이드 앱 안에서 열렸는지
-let S={exp:{},hl:{},proj:[],done:{},memo:{},set:{g:20000,y:50000,r:100000},hb:{},habits:[],per:[],ev:{},cats:[{id:'c1',n:'분류 1'},{id:'c2',n:'분류 2'}]};
+let S={exp:{},hl:{},proj:[],done:{},memo:{},set:{g:20000,y:50000,r:100000},hb:{},habits:[],per:[],ev:{},todo:[],cats:[{id:'c1',n:'분류 1'},{id:'c2',n:'분류 2'}]};
 try{const r=localStorage.getItem('diary');if(r)S=Object.assign(S,JSON.parse(r))}catch(e){}
 const save=()=>{try{localStorage.setItem('diary',JSON.stringify(S))}catch(e){}};
 const ymd=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
@@ -178,6 +182,16 @@ window.appBack=()=>{
  return false;
 };
 
+// ── 이달의 할 일: 체크 안 하면 다음 달에도 보이고, 체크하면 그 달까지만 보임 ──
+const curYm=()=>cur.getFullYear()+'-'+String(cur.getMonth()+1).padStart(2,'0');
+function todoCard(){
+ const ym=curYm(),l=(S.todo||[]).filter(x=>x.c<=ym&&(!x.d||ym<=x.d));
+ return `<div class="card"><h2>${cur.getMonth()+1}월 할 일</h2>
+ ${l.map(x=>{const ok=x.d===ym;return `<div class="row"><label class="tdl${ok?' ok':''}"><input type="checkbox" style="flex:none" data-f="todo" data-id="${x.id}" ${ok?'checked':''}><span>${esc(x.t)}${x.c<ym?` <span class="mut" style="text-decoration:none">· ${+x.c.slice(5)}월부터</span>`:''}</span></label><button data-a="deltd" data-id="${x.id}">✕</button></div>`}).join('')||'<div class="mut">이번 달 할 일을 간단히 적어 보세요</div>'}
+ <div class="row"><input id="tdn" placeholder="할 일 추가"><button class="p" data-a="addtd">추가</button></div>
+ <div class="mut">체크 안 한 일은 다음 달에도 이어서 보여요</div></div>`;
+}
+
 function cal(){
  const y=cur.getFullYear(),m=cur.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=ymd(new Date());
  const ms=ymd(new Date(y,m,1)),me=ymd(new Date(y,m,n)),LN={},ends=[];
@@ -185,10 +199,11 @@ function cal(){
  const pb=`padding-bottom:${Math.max(6,4+ends.length*13)}px`;
  let c='';for(let i=0;i<first;i++)c+=`<div class="c e" style="${pb}"></div>`;
  for(let d=1;d<=n;d++){const k=ymd(new Date(y,m,d)),ex=S.exp[k]||[],h=S.hl[k]||{},t=tot(k),nm=projOn(k).filter(p=>p.s===k||(k.endsWith('-01')&&p.s<k));
-  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':new Date(y,m,d).getDay()===6?' sat':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i>👣${fk(h.steps)}</i>`:''}${h.sleep?`<i>😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)?esc(p.n):''}</span>`).join('')}</div></div>`}
+  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':new Date(y,m,d).getDay()===6?' sat':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i class="hh">👣${fk(h.steps)}</i>`:''}${h.sleep?`<i class="hh">😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)?esc(p.n):''}</span>`).join('')}</div></div>`}
  return `<div class="bar"><button data-a="prev">‹</button><h1>${y}년 ${m+1}월</h1><span><button data-a="next">›</button> <button data-a="set">⚙</button></span></div>
  <div class="wk">${['월','화','수','목','금','토','일'].map(w=>`<div>${w}</div>`).join('')}</div><div class="grid">${c}</div>
- <div class="lg"><span><i class="sw g"></i>${fw(S.set.g)} 이하</span><span><i class="sw"></i>보통</span><span><i class="sw y"></i>${fw(S.set.y)} 이상</span><span><i class="sw r"></i>${fw(S.set.r)} 이상</span><span class="lgn">지출 기록이 있는 날만</span></div>`;
+ <div class="lg"><span><i class="sw g"></i>${fw(S.set.g)} 이하</span><span><i class="sw"></i>보통</span><span><i class="sw y"></i>${fw(S.set.y)} 이상</span><span><i class="sw r"></i>${fw(S.set.r)} 이상</span><span class="lgn">지출 기록이 있는 날만</span></div>
+ ${todoCard()}`;
 }
 
 function dayv(){
@@ -306,6 +321,8 @@ document.addEventListener('click',e=>{
  else if(a==='addc'){const n=$('#cn').value.trim();if(!n)return;S.cats.push({id:Date.now()+'',n});save()}
  else if(a==='delc'){S.cats=S.cats.filter(x=>x.id!==id);S.proj.forEach(p=>{if(p.cat===id)p.cat=''});hc=null;save()}
  else if(a==='tc'){co=!co}
+ else if(a==='addtd'){const n=$('#tdn').value.trim();if(!n)return;(S.todo=S.todo||[]).push({id:Date.now()+'',t:n,c:curYm(),d:null});save()}
+ else if(a==='deltd'){S.todo=(S.todo||[]).filter(x=>x.id!==id);save()}
  else if(a==='sms'){addSms();return}
  else if(a==='hsync'){syncHealth(7,true);alert('불러오는 중…');return}
  else if(a==='hsync30'){syncHealth(30,true);alert('불러오는 중…');return}
@@ -341,6 +358,7 @@ document.addEventListener('change',e=>{
   const n={s:p.s,e:p.e||'',d:p.d||''};n[f.slice(1)]=t.value;
   if(!n.s||(n.e&&n.e<n.s)||(n.d&&n.d<n.s)||(f==='pd'&&!t.value)){alert('날짜를 확인해 주세요');render();return}
   p.s=n.s;p.e=n.e;if(n.d)p.d=n.d;save();render();return}
+ if(f==='todo'){const x=(S.todo||[]).find(z=>z.id===t.dataset.id);if(x){x.d=t.checked?curYm():null;save();render()}return}
  if(f==='pmemo'){const p=S.proj.find(x=>x.id===t.dataset.id);if(p){p.memo=t.value;save()}return}
  if(f==='cat'){const c=S.cats.find(x=>x.id===t.dataset.id);if(c&&t.value.trim()){c.n=t.value.trim();save();render()}return}
  if(!f||view!=='day')return;const id=t.dataset.id;
