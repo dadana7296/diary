@@ -10,9 +10,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Noto+Serif+KR:wght@400;600&family=Nanum+Pen+Script&family=Caveat:wght@500&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#f4f3ef;--card:#fbfaf7;--fg:#1f1d1a;--mut:#86837d;--bd:#d8d5ce;--line:#e6e3dd;--ac:#1f1d1a;--on:#f6f1e6;--rib:#a8352c;--dot:rgba(31,29,26,.12);--cover:#1c1b19;--sh:0 1px 0 #e2dfd9,0 3px 10px rgba(0,0,0,.04);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1917;--card:#22201d;--fg:#ebe4d4;--mut:#9a9284;--bd:#3a3631;--line:#2f2c28;--ac:#ebe4d4;--on:#1a1917;--rib:#cf5a4e;--dot:rgba(235,228,212,.07);--cover:#0f0e0d;--sh:none;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#1a1917;--card:#22201d;--fg:#ebe4d4;--mut:#9a9284;--bd:#3a3631;--line:#2f2c28;--ac:#ebe4d4;--on:#1a1917;--rib:#cf5a4e;--dot:rgba(235,228,212,.07);--cover:#0f0e0d;--sh:none;color-scheme:dark}
+:root{--bg:#f4f3ef;--card:#fbfaf7;--fg:#1f1d1a;--mut:#86837d;--bd:#d8d5ce;--line:#e6e3dd;--ac:#1f1d1a;--on:#f6f1e6;--rib:#a8352c;--blue:#2f5b93;--dot:rgba(31,29,26,.12);--cover:#1c1b19;--sh:0 1px 0 #e2dfd9,0 3px 10px rgba(0,0,0,.04);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1917;--card:#22201d;--fg:#ebe4d4;--mut:#9a9284;--bd:#3a3631;--line:#2f2c28;--ac:#ebe4d4;--on:#1a1917;--rib:#cf5a4e;--blue:#7fa6dc;--dot:rgba(235,228,212,.07);--cover:#0f0e0d;--sh:none;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#1a1917;--card:#22201d;--fg:#ebe4d4;--mut:#9a9284;--bd:#3a3631;--line:#2f2c28;--ac:#ebe4d4;--on:#1a1917;--rib:#cf5a4e;--blue:#7fa6dc;--dot:rgba(235,228,212,.07);--cover:#0f0e0d;--sh:none;color-scheme:dark}
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background-color:var(--bg);background-image:radial-gradient(var(--dot) 1px,transparent 1.3px);background-size:18px 18px;color:var(--fg);font:15px/1.5 "Noto Sans KR","Malgun Gothic",-apple-system,sans-serif}
 .bar h1,.card h2,.c b,.wk div,.mt .h{font-family:"Noto Serif KR","Nanum Myeongjo",serif}
@@ -35,13 +35,14 @@ textarea{border:none;line-height:28px;padding:0 4px;background-image:repeating-l
 .wk{border-bottom:1px solid var(--fg);padding-bottom:4px;margin-bottom:2px}
 .wk div{text-align:center;font-size:12px;color:var(--mut)}
 .wk div:last-child{color:var(--rib)}
+.wk div:nth-child(6){color:var(--blue)}
 .c{position:relative;min-height:70px;border:none;border-bottom:1px solid var(--bd);border-radius:0;padding:3px 3px 16px;background:transparent;overflow:hidden;font-size:9px;line-height:1.25}
 .c.e{border-bottom:1px solid var(--bd);background:none}
 .c b{font-size:13px;font-weight:600;display:block}
 .c i{display:block;font-style:normal;color:var(--mut);white-space:nowrap}
-.c.today{box-shadow:inset 0 2px 0 var(--rib)}
-.c.today b{color:var(--rib)}
+.c.sat b{color:var(--blue)}
 .c.red b{color:var(--rib)}
+.c.today b{display:inline-block;min-width:21px;height:21px;line-height:19px;text-align:center;border:1.5px solid var(--fg);border-radius:50%;box-sizing:border-box;margin:-2px 0 0 -3px;padding:0 2px}
 .c i.lu{color:var(--mut);font-size:8px}
 .c i.hn{color:var(--rib);overflow:hidden;text-overflow:ellipsis}
 .c.g,.sw.g{background:rgba(110,140,90,.17)}.c.y,.sw.y{background:rgba(196,152,48,.2)}.c.r,.sw.r{background:rgba(168,53,44,.17)}
@@ -72,6 +73,7 @@ input[type=range]{width:100%;padding:0;border:none;accent-color:var(--fg)}
 .mt .h{width:var(--cs);height:var(--cs);text-align:center;font-family:"Noto Serif KR",serif}
 .mt .h b{display:block;font-size:11px;font-weight:600;color:var(--fg);letter-spacing:-.06em;line-height:1}
 .mt .h.r b{color:var(--rib)}
+.mt .h.s b{color:var(--blue)}
 .mt .h.now{background:var(--rib)}.mt .h.now b{color:#fff}
 .mt .n{width:var(--nw);font-family:"Caveat","Nanum Pen Script",cursive;font-size:17px;line-height:1;text-align:right;padding-right:6px;word-break:keep-all;border-right:1px solid var(--grid);border-bottom:2px solid var(--grid)}
 .mc{width:var(--cs);height:var(--cs);box-sizing:border-box;border:1px solid var(--grid);cursor:pointer}
@@ -183,7 +185,7 @@ function cal(){
  const pb=`padding-bottom:${Math.max(6,4+ends.length*13)}px`;
  let c='';for(let i=0;i<first;i++)c+='<div class="c e"></div>';
  for(let d=1;d<=n;d++){const k=ymd(new Date(y,m,d)),ex=S.exp[k]||[],h=S.hl[k]||{},t=tot(k),nm=projOn(k).filter(p=>p.s===k||(k.endsWith('-01')&&p.s<k));
-  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i>👣${fk(h.steps)}</i>`:''}${h.sleep?`<i>😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)||new Date(y,m,d).getDay()===1?esc(p.n):''}</span>`).join('')}</div></div>`}
+  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':new Date(y,m,d).getDay()===6?' sat':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i>👣${fk(h.steps)}</i>`:''}${h.sleep?`<i>😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)||new Date(y,m,d).getDay()===1?esc(p.n):''}</span>`).join('')}</div></div>`}
  return `<div class="bar"><button data-a="prev">‹</button><h1>${y}년 ${m+1}월</h1><span><button data-a="next">›</button> <button data-a="set">⚙</button></span></div>
  <div class="wk">${['월','화','수','목','금','토','일'].map(w=>`<div>${w}</div>`).join('')}</div><div class="grid">${c}</div>
  <div class="lg"><span><i class="sw g"></i>${fw(S.set.g)} 이하</span><span><i class="sw"></i>보통</span><span><i class="sw y"></i>${fw(S.set.y)} 이상</span><span><i class="sw r"></i>${fw(S.set.r)} 이상</span><span class="lgn">지출 기록이 있는 날만</span></div>`;
@@ -234,7 +236,7 @@ function setv(){
 function hab(){
  const y=hm.getFullYear(),m=hm.getMonth(),n=new Date(y,m+1,0).getDate(),td=ymd(new Date()),f=ymd(new Date(y,m,1));
  const C=[[...Array(10)].map((_,i)=>i+1).concat(0),[...Array(10)].map((_,i)=>i+11).concat(0),[...Array(11)].map((_,i)=>i+21<=n?i+21:0)];
- const hd=r=>C[r].map(d=>{if(!d)return '<th class="h"></th>';const dt=new Date(y,m,d),k=ymd(dt);return `<th class="h${dt.getDay()===0||HOL[k]?' r':''}${k===td?' now':''}"><b>${d}</b></th>`}).join('');
+ const hd=r=>C[r].map(d=>{if(!d)return '<th class="h"></th>';const dt=new Date(y,m,d),k=ymd(dt);return `<th class="h${dt.getDay()===0||HOL[k]?' r':dt.getDay()===6?' s':''}${k===td?' now':''}"><b>${d}</b></th>`}).join('');
  const cell=(h,d)=>{if(!d)return `<td class="mc na"></td>`;const k=ymd(new Date(y,m,d)),x=h.stop&&k>h.stop,on=!x&&S.hb[k+'|'+h.id];return `<td class="mc${x?' x':on?' on':''}" ${x?'':`data-a="hb" data-k="${k}" data-id="${h.id}"`}></td>`};
  const hs=S.habits.filter(h=>!h.stop||h.stop>=f);
  const tb=hs.length?`<table class="mt"><thead><tr><th class="tl" rowspan="3">${m+1}<span style="margin-left:4px">월</span><br>Habit<br>Tracker</th>${hd(0)}</tr><tr>${hd(1)}</tr><tr>${hd(2)}</tr></thead><tbody>${hs.map(h=>{const c=HBC[S.habits.indexOf(h)%HBC.length];return `<tr class="t" style="--hc:${c}"><td class="n" rowspan="3">${esc(h.n)}</td>${C[0].map(d=>cell(h,d)).join('')}</tr><tr style="--hc:${c}">${C[1].map(d=>cell(h,d)).join('')}</tr><tr class="b" style="--hc:${c}">${C[2].map(d=>cell(h,d)).join('')}</tr>`}).join('')}</tbody></table>`:'<div class="mut">아래에서 습관을 추가해 주세요</div>';
