@@ -55,7 +55,9 @@ textarea{border:none;line-height:28px;padding:0 4px;background-image:repeating-l
 .sw{display:inline-block;width:14px;height:14px;border:1px solid var(--mut);border-radius:2px;background:transparent}
 .lg .lgn{flex-basis:100%;font-size:11px;color:var(--mut)}
 .hl{position:absolute;inset:0;pointer-events:none}
-.hl span{position:absolute;left:0;right:0;display:block;height:12px;line-height:12px;padding:0 3px;font-size:8px;font-weight:600;color:#2a2722;white-space:nowrap;overflow:hidden;text-overflow:clip;opacity:.85}
+.hl span{position:absolute;left:0;right:0;display:block;opacity:.85}
+.hl span.ln{height:3px}
+.hl span.tg{height:10px;line-height:10px;padding:0 3px;font-size:8px;font-weight:600;color:#2a2722;white-space:nowrap;overflow:hidden;text-overflow:clip;border-radius:1px}
 .row{display:flex;gap:8px;align-items:center;margin:6px 0}
 .row input{flex:1;min-width:0}
 .dot{width:12px;height:12px;border-radius:50%;flex:none}
@@ -196,10 +198,10 @@ function cal(){
  const y=cur.getFullYear(),m=cur.getMonth(),first=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate(),td=ymd(new Date());
  const ms=ymd(new Date(y,m,1)),me=ymd(new Date(y,m,n)),LN={},ends=[];
  S.proj.filter(p=>p.s<=me&&pend(p)>=ms).sort((a,b)=>a.s<b.s?-1:1).forEach(p=>{let i=ends.findIndex(x=>x<p.s);if(i<0){i=ends.length;ends.push('')}ends[i]=pend(p);LN[p.id]=i});
- const pb=`padding-bottom:${Math.max(6,4+ends.length*13)}px`;
+ const pbn=n=>`padding-bottom:${Math.max(4,3+ends.length*4+n*11)}px`,pb=pbn(0);
  let c='';for(let i=0;i<first;i++)c+=`<div class="c e" style="${pb}"></div>`;
  for(let d=1;d<=n;d++){const k=ymd(new Date(y,m,d)),ex=S.exp[k]||[],h=S.hl[k]||{},t=tot(k),nm=projOn(k).filter(p=>p.s===k||(k.endsWith('-01')&&p.s<k));
-  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':new Date(y,m,d).getDay()===6?' sat':''}" data-a="day" data-d="${k}" style="${pb}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i class="hh">👣${fk(h.steps)}</i>`:''}${h.sleep?`<i class="hh">😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span style="background:${p.c};bottom:${(LN[p.id]||0)*13}px">${nm.includes(p)?esc(p.n):''}</span>`).join('')}</div></div>`}
+  c+=`<div class="c ${ex.length?col(t):''} ${k===td?'today':''}${HOL[k]||new Date(y,m,d).getDay()===0?' red':new Date(y,m,d).getDay()===6?' sat':''}" data-a="day" data-d="${k}" style="${pbn(nm.length)}"><b>${d}</b>${HOL[k]?`<i class="hn">${HOL[k]}</i>`:''}${(()=>{const l=lunar(new Date(y,m,d,12));return l?`<i class="lu">${l}</i>`:''})()}${perOn(k)?'<span class="dr">🩸</span>':''}${(()=>{const v=evOf(k);return v.slice(0,2).map(x=>`<i class="ev">${esc(x.n)}</i>`).join('')+(v.length>2?`<i>+${v.length-2}</i>`:'')})()}${h.steps?`<i class="hh">👣${fk(h.steps)}</i>`:''}${h.sleep?`<i class="hh">😴${h.sleep}h</i>`:''}${ex.length?`<i>${fw(t)}</i>`:''}<div class="hl">${projOn(k).map(p=>`<span class="ln" style="background:${p.c};bottom:${(LN[p.id]||0)*4+1}px"></span>`).join('')}${nm.map((p,i)=>`<span class="tg" style="background:${p.c};bottom:${ends.length*4+2+i*11}px">${esc(p.n)}</span>`).join('')}</div></div>`}
  return `<div class="bar"><button data-a="prev">‹</button><h1>${y}년 ${m+1}월</h1><span><button data-a="next">›</button> <button data-a="set">⚙</button></span></div>
  <div class="wk">${['월','화','수','목','금','토','일'].map(w=>`<div>${w}</div>`).join('')}</div><div class="grid">${c}</div>
  <div class="lg"><span><i class="sw g"></i>${fw(S.set.g)} 이하</span><span><i class="sw"></i>보통</span><span><i class="sw y"></i>${fw(S.set.y)} 이상</span><span><i class="sw r"></i>${fw(S.set.r)} 이상</span><span class="lgn">지출 기록이 있는 날만</span></div>
