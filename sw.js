@@ -1,5 +1,5 @@
 // 화면 파일을 폰에 저장해 두고, 인터넷이 없으면 저장본으로 엽니다. (개인 기록은 저장하지 않음)
-const C='diary-v11';
+const C='diary-v12';
 self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(['./','index.html','manifest.webmanifest','icon-192.png'].map(u=>new Request(u,{cache:'reload'})))).catch(()=>{}))});
 // 예전 버전 저장본은 지우기
 self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==C).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));

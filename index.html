@@ -187,6 +187,7 @@ const syncHealth=(days,manual)=>{if(!APP)return;window._hmanual=!!manual;try{And
 
 // ── 뒤로가기(앱): 처리했으면 true ──
 window.appBack=()=>{
+ flush&&flush();
  if(view==='pj'&&pm){pm=null;render();return true}
  if(view==='pj'&&hc){hc=null;render();return true}
  if(view!=='cal'){view='cal';render();return true}
@@ -379,6 +380,16 @@ document.addEventListener('change',e=>{
  else{const x=S.exp[day].find(z=>z.id===id);if(x)x[f]=f==='amt'?(+t.value||0):t.value}
  save();if(f!=='memo')render();
 });
+// 메모는 글자를 칠 때마다 바로 저장 (뒤로가기·앱 닫기에도 안 날아가게)
+document.addEventListener('input',e=>{
+ const t=e.target,f=t.dataset.f;
+ if(f==='memo'&&day){if(t.value)S.memo[day]=t.value;else delete S.memo[day];save();return}
+ if(f==='pmemo'){const p=S.proj.find(x=>x.id===t.dataset.id);if(p){p.memo=t.value;save()}return}
+});
+// 앱이 가려지거나 닫힐 때 입력 중이던 칸도 저장
+const flush=()=>{const t=document.activeElement;if(t&&t.dataset&&t.dataset.f)t.dispatchEvent(new Event('change',{bubbles:true}));save()};
+document.addEventListener('visibilitychange',()=>{if(document.hidden)flush()});
+window.addEventListener('pagehide',flush);
 document.addEventListener('input',e=>{
  const r=e.target.dataset.r;if(!r)return;let v=+e.target.value;const s=S.set;s[r]=v;
  if(s.g>s.y)(r==='g'?s.y=v:s.g=v);if(s.y>s.r)(r==='y'?s.r=v:s.y=v);
